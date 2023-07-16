@@ -32,13 +32,8 @@ const ImageDropzone = ({ onImageUpload }) => {
   });
 
   const baseStyle = {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    borderWidth: 2,
-    borderColor: '#999',
+    borderWidth: 1,
+    borderColor: '#c9c7c7',
     borderRadius: 5,
     borderStyle: 'solid',
     padding: '20px',
@@ -56,6 +51,7 @@ const ImageDropzone = ({ onImageUpload }) => {
   return (
     <div {...getRootProps()} style={style}>
       <input {...getInputProps()} />
+      <p style={{ color: '#c9c7c7' }}>Drop the images here ...</p>
     </div>
   );
 };

@@ -17,7 +17,6 @@ const style = {
   container: `bg-slate-100 w-full max-w-[1280px] m-auto rounded-md shadow-xl p-4`,
   h1: `text-3xl font-bold text-center text-gray-800 p-2`,
   form: `flex justify-between`,
-  input: `border-4 p-2 w-full mr-2 text-lg`,
   button: `border p-4 ml-2 bg-purple-500 text-white rounded hover:bg-purple-700 active:bg-purple-900`,
   list: `w-full`,
   count: `text-center p-2 text-lg`,
@@ -31,6 +30,7 @@ const App = () => {
   const [error, setError] = useState('');
   const [cursorPosition, setCursorPosition] = useState(null);
   const [answerCursorPosition, setAnswerCursorPosition] = useState(null);
+  const [textareaHeight, setTextareaHeight] = useState('auto');
 
   const sortCards = (event) => {
     event.preventDefault();
@@ -105,6 +105,12 @@ const App = () => {
     }
   };
 
+  const calcHeight = (value) => {
+    let numberOfLineBreaks = (value.match(/\n/g) || []).length;
+    // min-height + lines x line-height + padding + border
+    return 94 + numberOfLineBreaks * 24 + 16 + 2;
+  };
+
   const onImageUpload = (markdownImage, target) => {
     if (target === 'question') {
       setInput((prevInput) => {
@@ -163,23 +169,33 @@ const App = () => {
             <div className={style.container}>
               <h1 className={style.h1}>Deck Heading</h1>
               <form className={style.form}>
-                <div className="relative">
+                <div className="relative flex-1 mr-2">
                   <textarea
-                    className={style.input}
+                    id="question"
+                    className="textarea resize-ta w-full h-28 overflow-auto resize-none border border-gray-300 p-2 text-base rounded-md"
                     placeholder="Question"
                     value={input.question}
-                    onChange={(e) => setInput({ ...input, question: e.target.value })}
+                    onChange={(e) => {
+                      setInput({ ...input, question: e.target.value });
+                      setTextareaHeight(calcHeight(e.target.value));
+                    }}
                     onSelect={(e) => setCursorPosition(e.target.selectionStart)}
+                    style={{ height: `${textareaHeight}px` }}
                   />
                   <ImageDropzone onImageUpload={(markdownImage) => onImageUpload(markdownImage, 'question')} />
                 </div>
-                <div className="relative">
+                <div className="relative flex-1">
                   <textarea
-                    className={style.input}
+                    id="answer"
+                    className="textarea resize-ta w-full h-28 overflow-auto resize-none border border-gray-300 p-2 text-base rounded-md"
                     placeholder="Answer"
                     value={input.answer}
-                    onChange={(e) => setInput({ ...input, answer: e.target.value })}
+                    onChange={(e) => {
+                      setInput({ ...input, answer: e.target.value });
+                      setTextareaHeight(calcHeight(e.target.value));
+                    }}
                     onSelect={(e) => setAnswerCursorPosition(e.target.selectionStart)}
+                    style={{ height: `${textareaHeight}px` }}
                   />
                   <ImageDropzone onImageUpload={(markdownImage) => onImageUpload(markdownImage, 'answer')} />
                 </div>
