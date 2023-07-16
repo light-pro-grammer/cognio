@@ -10,7 +10,7 @@ import Card from './Card';
 import Login from './Login';
 import Register from './Register';
 import { auth, db } from './firebase';
-import Dropzone from './ImageDropzone';
+import ImageDropzone from './ImageDropzone';
 
 const style = {
   bg: `flex flex-col items-center justify-start min-h-screen min-w-screen p-4 font-sans bg-gradient-to-r from-[#2F80ED] to-[#1CB5E0]`,
@@ -29,6 +29,8 @@ const App = () => {
   const [input, setInput] = useState({ question: '', answer: '' });
   const [currentUser, setCurrentUser] = useState(null);
   const [error, setError] = useState('');
+  const [cursorPosition, setCursorPosition] = useState(null);
+  const [answerCursorPosition, setAnswerCursorPosition] = useState(null);
 
   const sortCards = (event) => {
     event.preventDefault();
@@ -103,6 +105,24 @@ const App = () => {
     }
   };
 
+  const onImageUpload = (markdownImage, target) => {
+    if (target === 'question') {
+      setInput((prevInput) => {
+        const beforeCursor = prevInput.question.substring(0, cursorPosition);
+        const afterCursor = prevInput.question.substring(cursorPosition);
+        const newQuestion = beforeCursor + markdownImage + afterCursor;
+        return { ...prevInput, question: newQuestion };
+      });
+    } else if (target === 'answer') {
+      setInput((prevInput) => {
+        const beforeCursor = prevInput.answer.substring(0, answerCursorPosition);
+        const afterCursor = prevInput.answer.substring(answerCursorPosition);
+        const newAnswer = beforeCursor + markdownImage + afterCursor;
+        return { ...prevInput, answer: newAnswer };
+      });
+    }
+  };
+
   useEffect(() => {
     // Listen to auth state changes
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
@@ -143,18 +163,26 @@ const App = () => {
             <div className={style.container}>
               <h1 className={style.h1}>Deck Heading</h1>
               <form className={style.form}>
-                <textarea
-                  className={style.input}
-                  placeholder="Question"
-                  value={input.question}
-                  onChange={(e) => setInput({ ...input, question: e.target.value })}
-                />
-                <textarea
-                  className={style.input}
-                  placeholder="Answer"
-                  value={input.answer}
-                  onChange={(e) => setInput({ ...input, answer: e.target.value })}
-                />
+                <div className="relative">
+                  <textarea
+                    className={style.input}
+                    placeholder="Question"
+                    value={input.question}
+                    onChange={(e) => setInput({ ...input, question: e.target.value })}
+                    onSelect={(e) => setCursorPosition(e.target.selectionStart)}
+                  />
+                  <ImageDropzone onImageUpload={(markdownImage) => onImageUpload(markdownImage, 'question')} />
+                </div>
+                <div className="relative">
+                  <textarea
+                    className={style.input}
+                    placeholder="Answer"
+                    value={input.answer}
+                    onChange={(e) => setInput({ ...input, answer: e.target.value })}
+                    onSelect={(e) => setAnswerCursorPosition(e.target.selectionStart)}
+                  />
+                  <ImageDropzone onImageUpload={(markdownImage) => onImageUpload(markdownImage, 'answer')} />
+                </div>
 
                 <div className={style.formBtns}>
                   <button className={style.button} onClick={(event) => addCard(event)}>
