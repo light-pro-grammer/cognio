@@ -3,9 +3,10 @@ import { useDropzone } from 'react-dropzone';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from './firebase';
 
-const ImageDropzone = ({ onImageUpload }) => {
+const ImageDropzone = ({ onImageUpload, setIsDragActive }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: async (acceptedFiles) => {
+      setIsDragActive(false);
       acceptedFiles.forEach(async (file) => {
         const storageRef = ref(storage, `images/${file.name}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
@@ -27,31 +28,30 @@ const ImageDropzone = ({ onImageUpload }) => {
         );
       });
     },
+    onDragEnter: () => setIsDragActive(true),
+    onDragLeave: () => setIsDragActive(false),
+    onDropAccepted: () => setIsDragActive(false),
+    onDropRejected: () => setIsDragActive(false),
     accept: 'image/*',
     noClick: true,
   });
 
   const baseStyle = {
-    borderWidth: 1,
-    borderColor: '#c9c7c7',
-    borderRadius: 5,
-    borderStyle: 'solid',
-    padding: '20px',
-    outline: 'none',
+    width: '100%',
+    height: '100%',
     transition: 'border .24s ease-in-out',
-    backgroundColor: 'rgba(255, 255, 255, 0.5)', // semi-transparent background
+    backgroundColor: 'transparent',
   };
 
   const activeStyle = {
     borderColor: '#2196f3',
   };
 
-  const style = isDragActive ? { ...baseStyle, ...activeStyle } : baseStyle;
+  const style = { ...baseStyle, ...(isDragActive ? activeStyle : {}) };
 
   return (
     <div {...getRootProps()} style={style}>
       <input {...getInputProps()} />
-      <p style={{ color: '#c9c7c7' }}>Drop the images here ...</p>
     </div>
   );
 };

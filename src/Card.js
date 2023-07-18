@@ -60,7 +60,7 @@ const Card = ({ card, updateCard, deleteCard, changeRating }) => {
           </div>
         </div>
       ) : (
-        <div className="flex space-x-5">
+        <div className="flex space-x-8">
           <div className="flex flex-col space-y-2 w-24">
             <div className="flex space-x-2">
               <button
@@ -87,13 +87,13 @@ const Card = ({ card, updateCard, deleteCard, changeRating }) => {
             </div>
           </div>
 
-          <div className="w-60">
+          <div className="w-96">
             <div className="prose">
               <ReactMarkdown>{card.question}</ReactMarkdown>
             </div>
           </div>
 
-          <div className="flex-grow">
+          <div className="w-max">
             <div className="prose">
               <ReactMarkdown>{card.answer}</ReactMarkdown>
             </div>

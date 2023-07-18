@@ -13,6 +13,12 @@ module.exports = {
                 color: '#2c5282',
               },
             },
+            blockquote: {
+              color: '#fff',
+              borderLeftWidth: '10px',
+              borderLeftColor: '#CC8899',
+              backgroundColor: '#4B0082',
+            },
             pre: {
               backgroundColor: '#282C34',
               padding: '6px 1px 6px 12px', //top, right, bottom, left

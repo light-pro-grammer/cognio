@@ -10,13 +10,11 @@ import Card from './Card';
 import Login from './Login';
 import Register from './Register';
 import { auth, db } from './firebase';
-import ImageDropzone from './ImageDropzone';
+import TextAreaWithImageDropzone from './TextAreaWithImageDropzone';
 
 const style = {
   bg: `flex flex-col items-center justify-start min-h-screen min-w-screen p-4 font-sans bg-gradient-to-r from-[#2F80ED] to-[#1CB5E0]`,
-  container: `bg-slate-100 w-full max-w-[1280px] m-auto rounded-md shadow-xl p-4`,
-  h1: `text-3xl font-bold text-center text-gray-800 p-2`,
-  form: `flex justify-between`,
+  container: `bg-slate-100 w-full m-auto rounded-md shadow-xl p-4`,
   button: `border p-4 ml-2 bg-purple-500 text-white rounded hover:bg-purple-700 active:bg-purple-900`,
   list: `w-full`,
   count: `text-center p-2 text-lg`,
@@ -28,9 +26,6 @@ const App = () => {
   const [input, setInput] = useState({ question: '', answer: '' });
   const [currentUser, setCurrentUser] = useState(null);
   const [error, setError] = useState('');
-  const [cursorPosition, setCursorPosition] = useState(null);
-  const [answerCursorPosition, setAnswerCursorPosition] = useState(null);
-  const [textareaHeight, setTextareaHeight] = useState('auto');
 
   const sortCards = (event) => {
     event.preventDefault();
@@ -99,33 +94,12 @@ const App = () => {
       await updateDoc(cardRef, { rating: boundedRating });
 
       // Update local state
-      setCards((cards) => cards.map((card) => (card.id === id ? { ...card, rating: boundedRating } : card)));
+      setCards((cards) => {
+        // create a new array with the updated card
+        return cards.map((card) => (card.id === id ? { ...card, rating: boundedRating } : card));
+      });
     } catch (e) {
       console.error('Error updating document: ', e);
-    }
-  };
-
-  const calcHeight = (value) => {
-    let numberOfLineBreaks = (value.match(/\n/g) || []).length;
-    // min-height + lines x line-height + padding + border
-    return 94 + numberOfLineBreaks * 24 + 16 + 2;
-  };
-
-  const onImageUpload = (markdownImage, target) => {
-    if (target === 'question') {
-      setInput((prevInput) => {
-        const beforeCursor = prevInput.question.substring(0, cursorPosition);
-        const afterCursor = prevInput.question.substring(cursorPosition);
-        const newQuestion = beforeCursor + markdownImage + afterCursor;
-        return { ...prevInput, question: newQuestion };
-      });
-    } else if (target === 'answer') {
-      setInput((prevInput) => {
-        const beforeCursor = prevInput.answer.substring(0, answerCursorPosition);
-        const afterCursor = prevInput.answer.substring(answerCursorPosition);
-        const newAnswer = beforeCursor + markdownImage + afterCursor;
-        return { ...prevInput, answer: newAnswer };
-      });
     }
   };
 
@@ -165,40 +139,20 @@ const App = () => {
       <div className="flex items-center justify-center min-h-screen min-w-screen p-4 font-sans bg-gradient-to-r from-[#2F80ED] to-[#1CB5E0]">
         {currentUser ? (
           <div className="flex flex-row flex-grow">
-            <Sidebar />
+            {/* <Sidebar /> */}
             <div className={style.container}>
-              <h1 className={style.h1}>Deck Heading</h1>
-              <form className={style.form}>
-                <div className="relative flex-1 mr-2">
-                  <textarea
-                    id="question"
-                    className="textarea resize-ta w-full h-28 overflow-auto resize-none border border-gray-300 p-2 text-base rounded-md"
-                    placeholder="Question"
-                    value={input.question}
-                    onChange={(e) => {
-                      setInput({ ...input, question: e.target.value });
-                      setTextareaHeight(calcHeight(e.target.value));
-                    }}
-                    onSelect={(e) => setCursorPosition(e.target.selectionStart)}
-                    style={{ height: `${textareaHeight}px` }}
-                  />
-                  <ImageDropzone onImageUpload={(markdownImage) => onImageUpload(markdownImage, 'question')} />
-                </div>
-                <div className="relative flex-1">
-                  <textarea
-                    id="answer"
-                    className="textarea resize-ta w-full h-28 overflow-auto resize-none border border-gray-300 p-2 text-base rounded-md"
-                    placeholder="Answer"
-                    value={input.answer}
-                    onChange={(e) => {
-                      setInput({ ...input, answer: e.target.value });
-                      setTextareaHeight(calcHeight(e.target.value));
-                    }}
-                    onSelect={(e) => setAnswerCursorPosition(e.target.selectionStart)}
-                    style={{ height: `${textareaHeight}px` }}
-                  />
-                  <ImageDropzone onImageUpload={(markdownImage) => onImageUpload(markdownImage, 'answer')} />
-                </div>
+              <h1 className="text-3xl font-bold text-center text-gray-800 p-2">Deck Heading</h1>
+              <form className="flex justify-between">
+                <TextAreaWithImageDropzone
+                  value={input.question}
+                  onChange={(value) => setInput({ ...input, question: value })}
+                  placeholder="Question"
+                />
+                <TextAreaWithImageDropzone
+                  value={input.answer}
+                  onChange={(value) => setInput({ ...input, answer: value })}
+                  placeholder="Answer"
+                />
 
                 <div className={style.formBtns}>
                   <button className={style.button} onClick={(event) => addCard(event)}>
