@@ -1,15 +1,19 @@
 import '../../styles.css';
 import { BsHouseDoor, BsBook, BsGear, BsBoxArrowRight } from 'react-icons/bs';
 import { signOutUser } from '../../api/firebase';
-import { collection, addDoc, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc, deleteDoc, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../api/firebase';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 
 const Sidebar = ({ currentUser }) => {
   const [showForm, setShowForm] = useState(false);
   const [deckName, setDeckName] = useState('');
   const [decks, setDecks] = useState([]);
+  const [renameDeckId, setRenameDeckId] = useState(null);
+  const [newDeckName, setNewDeckName] = useState('');
 
   const handleNewDeck = async (e) => {
     e.preventDefault();
@@ -31,6 +35,21 @@ const Sidebar = ({ currentUser }) => {
 
   const handleDeckClick = (id) => {
     navigate(`/deck/${id}`);
+  };
+
+  const handleRenameDeck = async (event) => {
+    event.preventDefault();
+    if (renameDeckId && newDeckName) {
+      const deckRef = doc(db, 'decks', renameDeckId);
+      await updateDoc(deckRef, { name: newDeckName });
+      setRenameDeckId(null);
+      setNewDeckName('');
+    }
+  };
+
+  const handleDeleteDeck = async (id) => {
+    const deckRef = doc(db, 'decks', id);
+    await deleteDoc(deckRef);
   };
 
   useEffect(() => {
@@ -101,9 +120,21 @@ const Sidebar = ({ currentUser }) => {
         </form>
       )}
       {decks.map((deck) => (
-        <button key={deck.id} onClick={() => handleDeckClick(deck.id)}>
-          {deck.name}
-        </button>
+        <div key={deck.id}>
+          <button onClick={() => handleDeckClick(deck.id)}>{deck.name}</button>
+          <button onClick={() => setRenameDeckId(deck.id)}>
+            <FaEdit />
+          </button>
+          {renameDeckId === deck.id && (
+            <form onSubmit={handleRenameDeck}>
+              <input value={newDeckName} onChange={(e) => setNewDeckName(e.target.value)} placeholder="New deck name" />
+              <button type="submit">Submit</button>
+            </form>
+          )}
+          <button onClick={() => handleDeleteDeck(deck.id)}>
+            <FaRegTrashAlt />
+          </button>
+        </div>
       ))}
     </div>
   );

@@ -1,3 +1,4 @@
+// import { useEffect } from 'react';
 import { EditorContent, useEditor, BubbleMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Document from '@tiptap/extension-document';
@@ -145,7 +146,7 @@ const MenuBar = ({ editor }) => {
   );
 };
 
-const EditorComponent = ({ content, setContent, placeholder }) => {
+const Editor = ({ content, setContent, placeholder }) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -172,6 +173,12 @@ const EditorComponent = ({ content, setContent, placeholder }) => {
       setContent(editor.getHTML());
     },
   });
+
+  // useEffect(() => {
+  //   if (editor) {
+  //     editor.commands.setContent(content);
+  //   }
+  // }, [content, editor]);
 
   return (
     <div>
@@ -243,4 +250,4 @@ const EditorComponent = ({ content, setContent, placeholder }) => {
   );
 };
 
-export default EditorComponent;
+export default Editor;
