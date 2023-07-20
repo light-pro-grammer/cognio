@@ -1,4 +1,4 @@
-// import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { EditorContent, useEditor, BubbleMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Document from '@tiptap/extension-document';
@@ -153,7 +153,7 @@ const Editor = ({ content, setContent, placeholder }) => {
       Document,
       Underline,
       Placeholder.configure({
-        placeholder: placeholder, // Use the placeholder prop here
+        placeholder: placeholder,
       }),
       Image.configure({
         inline: true,
@@ -174,11 +174,11 @@ const Editor = ({ content, setContent, placeholder }) => {
     },
   });
 
-  // useEffect(() => {
-  //   if (editor) {
-  //     editor.commands.setContent(content);
-  //   }
-  // }, [content, editor]);
+  useEffect(() => {
+    if (editor && content === '') {
+      editor.commands.setContent(content);
+    }
+  }, [content, editor]);
 
   return (
     <div>

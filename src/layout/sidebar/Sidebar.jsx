@@ -8,12 +8,12 @@ import { useNavigate } from 'react-router-dom';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { FaEdit } from 'react-icons/fa';
 
-const Sidebar = ({ currentUser }) => {
+const Sidebar = ({ currentUser, className }) => {
+  const [decks, setDecks] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [deckName, setDeckName] = useState('');
-  const [decks, setDecks] = useState([]);
-  const [renameDeckId, setRenameDeckId] = useState(null);
   const [newDeckName, setNewDeckName] = useState('');
+  const [renameDeckId, setRenameDeckId] = useState(null);
 
   const handleNewDeck = async (e) => {
     e.preventDefault();
@@ -72,7 +72,9 @@ const Sidebar = ({ currentUser }) => {
   }, [currentUser]); // Dependency on currentUser so this effect runs whenever currentUser changes
 
   return (
-    <div className="flex flex-col w-60 p-5 border-r flex-grow bg-gray-100">
+    // <div className={`flex flex-col w-60 p-5 border-r flex-grow bg-gray-100 ${className}`}>
+    // <div className={`absolute left-0 flex flex-col w-60 p-5 border-r flex-grow bg-gray-100 ${className}`}>
+    <div className={`left-0 flex flex-col w-60 p-5 border-r flex-grow bg-gray-100 ${className}`}>
       {/* There will be added a Search Functionality with Ctrl + K */}
 
       <ul className="flex flex-col space-y-3">
