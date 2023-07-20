@@ -3,27 +3,27 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { collection, addDoc, query, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './styles.css';
-import { AiOutlinePlus } from 'react-icons/ai';
-import { BsSortDownAlt } from 'react-icons/bs';
-import Sidebar from './Sidebar';
-import Card from './Card';
-import Login from './Login';
-import Register from './Register';
-import { auth, db } from './firebase';
-import TextAreaWithImageDropzone from './TextAreaWithImageDropzone';
+// import { BsSortDownAlt } from 'react-icons/bs';
+import Sidebar from './layout/sidebar/Sidebar';
+// import Card from './Card';
+import Home from './layout/homepage/Home';
+import Login from './components/Login';
+import Register from './components/Register';
+import { auth, db } from './api/firebase';
+// import Editor from './Editor';
+import Deck from './components/Deck';
 
 const style = {
   bg: `flex flex-col items-center justify-start min-h-screen min-w-screen p-4 font-sans bg-gradient-to-r from-[#2F80ED] to-[#1CB5E0]`,
   container: `bg-slate-100 w-full m-auto rounded-md shadow-xl p-4`,
-  button: `border p-4 ml-2 bg-purple-500 text-white rounded hover:bg-purple-700 active:bg-purple-900`,
   list: `w-full`,
   count: `text-center p-2 text-lg`,
-  errorMessage: `text-red-500 p-2 text-sm text-center`,
 };
 
 const App = () => {
   const [cards, setCards] = useState([]);
-  const [input, setInput] = useState({ question: '', answer: '' });
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
   const [error, setError] = useState('');
 
@@ -35,26 +35,26 @@ const App = () => {
 
   const addCard = async (event) => {
     event.preventDefault();
-    setError(''); // Reset the error state when the form is submitted
+    setError('');
     if (!currentUser) {
       console.error('Error: not logged in');
       return;
     }
-    if (!input.question.trim() || !input.answer.trim()) {
-      setError('Both fields must be filled'); // Set the error state if fields are empty
+    // Use `question` and `answer` instead of `input.question` and `input.answer`
+    if (!question.trim() || !answer.trim()) {
+      setError('Both fields must be filled');
       return;
     }
 
-    // Add new card to Firestore
     try {
-      const cardDataWithoutId = { ...input, rating: 1, userId: currentUser.uid };
+      const cardDataWithoutId = { question, answer, rating: 1, userId: currentUser.uid };
       await addDoc(collection(db, 'cards'), cardDataWithoutId);
-      setInput({ question: '', answer: '' });
+      setQuestion('');
+      setAnswer('');
     } catch (e) {
       console.error('Error adding document: ', e);
     }
   };
-
   const updateCard = async (id, question, answer, rating, userId) => {
     // Update card in Firestore
     try {
@@ -139,48 +139,17 @@ const App = () => {
       <div className="flex items-center justify-center min-h-screen min-w-screen p-4 font-sans bg-gradient-to-r from-[#2F80ED] to-[#1CB5E0]">
         {currentUser ? (
           <div className="flex flex-row flex-grow">
-            {/* <Sidebar /> */}
+            <Sidebar currentUser={currentUser} />
             <div className={style.container}>
-              <h1 className="text-3xl font-bold text-center text-gray-800 p-2">Deck Heading</h1>
-              <form className="flex justify-between">
-                <TextAreaWithImageDropzone
-                  value={input.question}
-                  onChange={(value) => setInput({ ...input, question: value })}
-                  placeholder="Question"
-                />
-                <TextAreaWithImageDropzone
-                  value={input.answer}
-                  onChange={(value) => setInput({ ...input, answer: value })}
-                  placeholder="Answer"
-                />
-
-                <div className={style.formBtns}>
-                  <button className={style.button} onClick={(event) => addCard(event)}>
-                    <AiOutlinePlus size={30} />
-                  </button>
-                  <button className={style.button} onClick={(event) => sortCards(event)}>
-                    <BsSortDownAlt size={30} />
-                  </button>
-                </div>
-              </form>
-              {error && <div className={style.errorMessage}>{error}</div>}
-              <p className={style.count}>You have {cards.length} cards</p>
-              <ul className={style.list}>
-                {cards.map((card) => (
-                  <Card
-                    key={card.id}
-                    card={card}
-                    updateCard={updateCard}
-                    deleteCard={deleteCard}
-                    changeRating={changeRating}
-                  />
-                ))}
-              </ul>
+              <Routes>
+                <Route path="/" element={<Home />} /> {/* You need to create a Home component */}
+                <Route path="/deck/:deckId" element={<Deck currentUser={currentUser} />} />
+              </Routes>
             </div>
           </div>
         ) : (
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>
         )}

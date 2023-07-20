@@ -1,0 +1,175 @@
+.ProseMirror {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 2px solid #ddd;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  color: rgb(31 41 55);
+  min-height: 120px;
+}
+
+.ProseMirror:focus {
+  border-color: #000;
+  outline: none; /* Removes the default focus outline */
+}
+
+/* Basic editor styles */
+.ProseMirror > * + * {
+  margin-top: 0.25em;
+}
+
+.ProseMirror ul {
+  padding: 0 1rem;
+  list-style-type: disc;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-left: 1.625em;
+}
+
+.ProseMirror ol {
+  padding: 0 1rem;
+  list-style-type: decimal;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-left: 1.625em;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+  line-height: 1.1;
+}
+
+.ProseMirror h1 {
+  color: #111827;
+  font-weight: 800;
+  font-size: 2.25em;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  line-height: 1.3333333;
+}
+
+.ProseMirror h2 {
+  color: #111827;
+  font-weight: 700;
+  font-size: 1.5em;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  line-height: 1.1111111;
+}
+
+.ProseMirror h3 {
+  color: #111827;
+  font-weight: 600;
+  font-size: 1.25em;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  line-height: 1.1111111;
+}
+
+.ProseMirror code {
+  color: #eb5757;
+  font-weight: 600;
+  font-size: 0.875em;
+  background-color: #e0e0e0;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.ProseMirror pre {
+  background: #0d0d0d;
+  color: #fff;
+  font-family: 'JetBrainsMono', monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.ProseMirror pre code {
+  color: inherit;
+  padding: 0;
+  background: none;
+  font-size: 0.8rem;
+}
+
+.ProseMirror img {
+  height: auto;
+}
+
+.ProseMirror blockquote {
+  padding-left: 1rem;
+  border-left: 2px solid rgba(13, 13, 13, 0.1);
+}
+
+.ProseMirror hr {
+  border: none;
+  border-top: 2px solid rgba(13, 13, 13, 0.1);
+  margin: 2rem 0;
+}
+
+.ProseMirror strong {
+  color: #111827;
+  font-weight: 700;
+}
+
+.ProseMirror em {
+  color: #111827;
+  font-style: italic;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.content-editor {
+  margin: 0.75rem 0;
+}
+
+.bubble-menu {
+  display: flex;
+  background-color: #0d0d0d;
+  padding: 0.2rem;
+  border-radius: 0.5rem;
+}
+
+.bubble-menu button {
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0 0.2rem;
+  opacity: 0.6;
+}
+
+.bubble-menu button:hover,
+.bubble-menu button.is-active {
+  opacity: 1;
+}
+
+.editor-buttons button {
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid #000;
+}
+
+.editor-buttons button:last-child {
+  margin-right: 0;
+}
+
+.editor-buttons button.is-active {
+  background-color: #2f80ed;
+  color: #fff;
+}
+
+.editor-buttons button img {
+  width: 1rem;
+}
