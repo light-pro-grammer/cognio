@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { collection, doc, addDoc, updateDoc, deleteDoc, getDoc, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDoc, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../api/firebase';
 import CardList from './CardList';
 
