@@ -3,14 +3,64 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { AiOutlineMinus } from 'react-icons/ai';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { FaEdit } from 'react-icons/fa';
+import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../api/firebase';
 import '../styles.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
 import Editor from './Editor.jsx';
 
-const Card = ({ card, updateCard, deleteCard, changeRating }) => {
+const Card = ({ card, cards, setCards }) => {
   const [editMode, setEditMode] = useState(false);
   const [input, setInput] = useState({ question: card.question, answer: card.answer });
+
+  const updateCard = async (id, question, answer, rating, userId) => {
+    // Update card in Firestore
+    try {
+      const cardRef = doc(db, 'cards', id);
+      await updateDoc(cardRef, { question, answer, rating, userId });
+
+      // Update local state
+      setCards((cards) => cards.map((card) => (card.id === id ? { id, question, answer, rating, userId } : card)));
+    } catch (e) {
+      console.error('Error updating document: ', e);
+    }
+  };
+
+  const deleteCard = async (id) => {
+    // Delete card from Firestore
+    try {
+      const cardRef = doc(db, 'cards', id);
+      await deleteDoc(cardRef);
+
+      // Update local state
+      setCards((cards) => cards.filter((card) => card.id !== id));
+    } catch (e) {
+      console.error('Error deleting document: ', e);
+    }
+  };
+
+  const changeRating = async (id, delta) => {
+    // calculate the new rating
+    const newRating = cards.find((card) => card.id === id).rating + delta;
+
+    // ensure rating is between 1 and 5
+    const boundedRating = Math.min(5, Math.max(1, newRating));
+
+    // Update card rating in Firestore
+    try {
+      const cardRef = doc(db, 'cards', id);
+      await updateDoc(cardRef, { rating: boundedRating });
+
+      // Update local state
+      setCards((cards) => {
+        // create a new array with the updated card
+        return cards.map((card) => (card.id === id ? { ...card, rating: boundedRating } : card));
+      });
+    } catch (e) {
+      console.error('Error updating document: ', e);
+    }
+  };
 
   const toggleEdit = () => {
     setEditMode(!editMode);
