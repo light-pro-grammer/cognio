@@ -10,7 +10,7 @@ import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
 import Editor from './Editor.jsx';
 
-const Card = ({ card, cards, setCards }) => {
+const Card = ({ card, cards, setCards, questionVisible, setQuestionVisible, answerVisible, setAnswerVisible }) => {
   const [editMode, setEditMode] = useState(false);
   const [input, setInput] = useState({ question: card.question, answer: card.answer });
 
@@ -137,11 +137,13 @@ const Card = ({ card, cards, setCards }) => {
             </div>
           </div>
 
-          <div className="w-96">
+          <div
+            className={`w-96 ${questionVisible ? '' : 'opacity-0'}`}
+            onClick={() => setQuestionVisible(!questionVisible)}
+          >
             <div className="prose" dangerouslySetInnerHTML={{ __html: card.question }}></div>
           </div>
-
-          <div className="w-max">
+          <div className={`w-max ${answerVisible ? '' : 'opacity-0'}`} onClick={() => setAnswerVisible(!answerVisible)}>
             <div className="prose" dangerouslySetInnerHTML={{ __html: card.answer }}></div>
           </div>
         </div>

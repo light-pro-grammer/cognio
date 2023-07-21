@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { collection, doc, getDoc, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDoc, query, where, onSnapshot, orderBy } from 'firebase/firestore';
 import { db } from '../api/firebase';
 import CardList from './CardList';
 
@@ -22,7 +22,7 @@ const Deck = ({ currentUser }) => {
 
     // Fetch cards data
     if (currentUser) {
-      const q = query(collection(db, 'cards'), where('deckId', '==', deckId));
+      const q = query(collection(db, 'cards'), where('deckId', '==', deckId), orderBy('rating', 'asc'));
       unsubscribeFirestore = onSnapshot(q, (snapshot) => {
         let cards = [];
         snapshot.forEach((doc) => {
