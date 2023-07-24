@@ -137,13 +137,10 @@ const Card = ({ card, cards, setCards, questionVisible, setQuestionVisible, answ
             </div>
           </div>
 
-          <div
-            className={`w-96 ${questionVisible ? '' : 'opacity-0'}`}
-            onClick={() => setQuestionVisible(!questionVisible)}
-          >
+          <div className={`w-96 ${questionVisible ? '' : 'opacity-0'}`} onClick={() => setQuestionVisible(true)}>
             <div className="prose" dangerouslySetInnerHTML={{ __html: card.question }}></div>
           </div>
-          <div className={`w-max ${answerVisible ? '' : 'opacity-0'}`} onClick={() => setAnswerVisible(!answerVisible)}>
+          <div className={`w-max ${answerVisible ? '' : 'opacity-0'}`} onClick={() => setAnswerVisible(true)}>
             <div className="prose" dangerouslySetInnerHTML={{ __html: card.answer }}></div>
           </div>
         </div>

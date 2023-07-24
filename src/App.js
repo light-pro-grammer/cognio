@@ -4,7 +4,6 @@ import Home from './layout/homepage/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import Deck from './components/Deck';
-import { TbLayoutSidebarRightExpand, TbLayoutSidebarRightCollapse } from 'react-icons/tb';
 import './styles.css';
 import { AuthProvider, useAuth } from './AuthContext';
 import { useState } from 'react';
@@ -28,12 +27,13 @@ const AppContent = () => {
               className="self-start mt-4 text-white hover:text-gray-800"
               onClick={() => setSidebarVisible(!sidebarVisible)}
             >
-              {sidebarVisible ? <TbLayoutSidebarRightExpand size={24} /> : <TbLayoutSidebarRightCollapse size={24} />}
+              {/* {sidebarVisible ? <TbLayoutSidebarRightExpand size={24} /> : <TbLayoutSidebarRightCollapse size={24} />} */}
             </button>
             <div className="bg-slate-100 w-full m-auto rounded-md shadow-xl p-4">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/deck/:deckId" element={<Deck currentUser={currentUser} />} />
+                <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             </div>
           </div>
@@ -41,7 +41,7 @@ const AppContent = () => {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="*" element={<Navigate to="/login" />} />
+            {/* <Route path="*" element={<Navigate to="/login" />} /> */}
           </Routes>
         )}
       </div>
