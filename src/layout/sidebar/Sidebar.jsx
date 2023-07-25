@@ -76,11 +76,11 @@ const Sidebar = ({ currentUser, className }) => {
   }, [currentUser]); // Dependency on currentUser so this effect runs whenever currentUser changes
 
   return (
-    <div className="flex relative">
+    <div className="flex relative h-screen bg-white text-gray-800">
       <div
-        className={`transition-all duration-200 ease-in-out flex flex-col p-5 border-r bg-gray-100 overflow-hidden ${className} ${
+        className={`transition-all duration-200 ease-in-out flex flex-col p-5 border-r bg-white ${className} ${
           isSidebarOpen ? 'w-64' : 'w-0'
-        }`}
+        } rounded-tr-lg rounded-br-lg`}
       >
         {isSidebarOpen && (
           <>
@@ -88,20 +88,29 @@ const Sidebar = ({ currentUser, className }) => {
 
             <ul className="flex flex-col space-y-3">
               <li className="flex items-center space-x-2">
-                <BsHouseDoor size={24} />
-                <button className="text-gray-600 hover:text-gray-800">Home</button>
+                <button className="flex items-center w-full space-x-2 px-3 py-2 mt-4 rounded transition-colors duration-200 bg-blue-500 text-white hover:bg-blue-600">
+                  <BsHouseDoor size={24} className="mr-2" />
+                  Home
+                </button>
               </li>
               <li className="flex items-center space-x-2">
-                <BsBook size={24} />
-                <button className="text-gray-600 hover:text-gray-800">My Decks</button>
+                <button className="flex items-center w-full space-x-2 px-3 py-2 rounded transition-colors duration-200 bg-blue-500 text-white hover:bg-blue-600">
+                  <BsBook size={24} className="mr-2" />
+                  My Decks
+                </button>
               </li>
               <li className="flex items-center space-x-2">
-                <BsGear size={24} />
-                <button className="text-gray-600 hover:text-gray-800">Settings</button>
+                <button className="flex items-center w-full space-x-2 px-3 py-2 rounded transition-colors duration-200 bg-blue-500 text-white hover:bg-blue-600">
+                  <BsGear size={24} className="mr-2" />
+                  Settings
+                </button>
               </li>
               <li className="flex items-center space-x-2">
-                <BsBoxArrowRight size={24} />
-                <button className="text-gray-600 hover:text-gray-800" onClick={signOutUser}>
+                <button
+                  className="flex items-center w-full space-x-2 px-3 py-2 rounded transition-colors duration-200 bg-red-500 text-white hover:bg-red-600"
+                  onClick={signOutUser}
+                >
+                  <BsBoxArrowRight size={24} className="mr-2" />
                   Log Out
                 </button>
               </li>
@@ -130,31 +139,61 @@ const Sidebar = ({ currentUser, className }) => {
                 </button>
               </form>
             )}
-            {decks.map((deck) => (
-              <div key={deck.id}>
-                <button onClick={() => handleDeckClick(deck.id)}>{deck.name}</button>
-                <button onClick={() => setRenameDeckId(deck.id)}>
-                  <FaEdit />
-                </button>
-                {renameDeckId === deck.id && (
-                  <form onSubmit={handleRenameDeck}>
-                    <input
-                      value={newDeckName}
-                      onChange={(e) => setNewDeckName(e.target.value)}
-                      placeholder="New deck name"
-                    />
-                    <button type="submit">Submit</button>
-                  </form>
-                )}
-                <button onClick={() => handleDeleteDeck(deck.id)}>
-                  <FaRegTrashAlt />
-                </button>
-              </div>
-            ))}
+            <div className="border py-2">
+              {decks.map((deck) => (
+                <div key={deck.id} className="space-y-2">
+                  <div className="flex justify-between items-center space-x-2">
+                    <button
+                      onClick={() => handleDeckClick(deck.id)}
+                      className="px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-700 transition-colors duration-200 truncate flex-grow text-left"
+                      style={{ maxWidth: '150px' }}
+                    >
+                      {deck.name}
+                    </button>
+
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => setRenameDeckId(deck.id)}
+                        className="p-2 bg-gray-200 text-gray-800 rounded shadow hover:bg-gray-300 transition-colors duration-200"
+                      >
+                        <FaEdit />
+                      </button>
+
+                      <button
+                        onClick={() => handleDeleteDeck(deck.id)}
+                        className="p-2 bg-red-500 text-white rounded shadow hover:bg-red-700 transition-colors duration-200"
+                      >
+                        <FaRegTrashAlt />
+                      </button>
+                    </div>
+                  </div>
+
+                  {renameDeckId === deck.id && (
+                    <form onSubmit={handleRenameDeck} className="flex space-x-2">
+                      <input
+                        value={newDeckName}
+                        onChange={(e) => setNewDeckName(e.target.value)}
+                        placeholder="New deck name"
+                        className="px-4 py-2 border border-gray-300 rounded shadow focus:outline-none focus:border-blue-500 transition-colors duration-200"
+                      />
+                      <button
+                        type="submit"
+                        className="px-4 py-2 bg-green-500 text-white rounded shadow hover:bg-green-700 transition-colors duration-200"
+                      >
+                        Submit
+                      </button>
+                    </form>
+                  )}
+                </div>
+              ))}
+            </div>
           </>
         )}
       </div>
-      <button className="absolute top-0 right-0 m-2" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+      <button
+        className="absolute top-0 right-0 m-2 text-purple-500 hover:text-purple-700"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
         {isSidebarOpen ? <TbLayoutSidebarRightExpand size={24} /> : <TbLayoutSidebarRightCollapse size={24} />}
       </button>
     </div>

@@ -22,7 +22,7 @@ const Deck = ({ currentUser }) => {
 
     // Fetch cards data
     if (currentUser) {
-      const q = query(collection(db, 'cards'), where('deckId', '==', deckId), orderBy('rating', 'asc'));
+      const q = query(collection(db, 'cards'), where('deckId', '==', deckId));
       unsubscribeFirestore = onSnapshot(q, (snapshot) => {
         let cards = [];
         snapshot.forEach((doc) => {
